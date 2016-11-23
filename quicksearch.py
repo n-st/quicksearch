@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 from flask import Flask, Response, redirect, request, url_for
+from werkzeug.contrib.fixers import ProxyFix
 from urllib.parse import quote, quote_plus, unquote, unquote_plus
 import re
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 @app.route('/')
 def root():
