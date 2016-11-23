@@ -76,6 +76,10 @@ def google_image(query):
 def google_video(query):
     return simple_query_handler('https://www.google.com/search?q=%s&tbm=vid', query)
 
+@app.route('/inwx/<path:query>')
+def domain_check_inwx(query):
+    return simple_query_handler('https://www.inwx.de/de/domain/check#search=%s#region=DEFAULT#rc=rc1', query)
+
 @app.route('/tineye/<path:query>')
 def tineye(query):
     return simple_query_handler('https://tineye.com/search?url=%s', query)
