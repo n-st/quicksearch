@@ -8,26 +8,43 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    output = []
-
+    searches = []
+    redirects = []
     header = []
+    s_header = []
+    r_header = []
+
     header += ['QuickSearch']
     header += ['===========']
-    header += ['']
-    header += ['The following search providers are defined:']
-    header += ['']
+    s_header += ['']
+    s_header += ['The following search providers are defined:']
+    s_header += ['']
+    r_header += ['']
+    r_header += ['The following static redirections are defined:']
+    r_header += ['']
 
     for rule in app.url_map.iter_rules():
         if rule.endpoint in ['static', 'root']:
             continue
 
-        url = request.url_root.rstrip('/') + re.sub(r'<(.+:)?(.+)>', r'', str(rule))
-
+        url = request.url_root.rstrip('/') + re.sub(r'<(.+:)?(.+)>', r'…', str(rule))
         line = unquote("* {:40s} {}".format(rule.endpoint, url))
-        output.append(line)
+
+        if '…' in url:
+            searches.append(line)
+        else:
+            redirects.append(line)
+
+    response_lines = header
+    if searches:
+        response_lines += s_header
+        response_lines += sorted(searches)
+    if redirects:
+        response_lines += r_header
+        response_lines += sorted(redirects)
 
     return Response(
-            '\n'.join(header + sorted(output)),
+            '\n'.join(response_lines),
             mimetype='text/markdown'
             )
 
@@ -37,6 +54,9 @@ def simple_query_handler(url, query):
         search_str += '?' + request.query_string.decode('utf-8')
 
     return redirect(url % quote_plus(search_str), code=303)
+
+def static_redirect_handler(url):
+    return redirect(url, code=303)
 
 @app.route('/google/<path:query>')
 @app.route('/g/<path:query>')
@@ -90,6 +110,10 @@ def packages_archuserrepo(query):
 @app.route('/freshports/<path:query>')
 def packages_freebsd_freshports(query):
     return simple_query_handler('https://www.freshports.org/search.php?num=20&query=%s', query)
+
+@app.route('/mensa')
+def mensa_uni_passau():
+    return static_redirect_handler('http://www.stwno.de/infomax/daten-extern/html/speiseplaene.php?einrichtung=UNI-P')
 
 if __name__ == '__main__':
     app.run()
