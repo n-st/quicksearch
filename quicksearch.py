@@ -80,6 +80,10 @@ def google_video(query):
 def domain_check_inwx(query):
     return simple_query_handler('https://www.inwx.de/de/domain/check#search=%s#region=DEFAULT#rc=rc1', query)
 
+@app.route('/ovhd/<path:query>')
+def domain_check_ovh(query):
+    return simple_query_handler('https://www.ovh.de/cgi-bin/newOrder/order.cgi?domain_domainChooser_domain=%s', query)
+
 @app.route('/tineye/<path:query>')
 def tineye(query):
     return simple_query_handler('https://tineye.com/search?url=%s', query)
