@@ -28,6 +28,7 @@ def root():
             continue
 
         url = request.url_root.rstrip('/') + re.sub(r'<(.+:)?(.+)>', r'…', str(rule))
+        url = url.rpartition('://')[2]
         line = unquote("* {:40s} {}".format(rule.endpoint, url))
 
         if '…' in url:
