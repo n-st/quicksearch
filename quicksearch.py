@@ -126,5 +126,9 @@ def packages_freebsd_freshports(query):
 def mensa_uni_passau():
     return static_redirect_handler('http://www.stwno.de/infomax/daten-extern/html/speiseplaene.php?einrichtung=UNI-P')
 
+@app.route('/strings.sh')
+def bash_string_manipulation():
+    return static_redirect_handler('http://tldp.org/LDP/abs/html/string-manipulation.html')
+
 if __name__ == '__main__':
     app.run()
