@@ -130,5 +130,13 @@ def mensa_uni_passau():
 def bash_string_manipulation():
     return static_redirect_handler('http://tldp.org/LDP/abs/html/string-manipulation.html')
 
+@app.route('/ula')
+def ipv6_unique_local_address():
+    return static_redirect_handler('http://unique-local-ipv6.com/')
+
+@app.route('/mac/<path:query>')
+def mac_address_vendor_lookup(query):
+    return simple_query_handler('http://coffer.com/mac_find/?string=%s', query)
+
 if __name__ == '__main__':
     app.run()
