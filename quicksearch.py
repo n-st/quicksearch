@@ -137,6 +137,7 @@ def mensa_uni_passau():
     return static_redirect_handler('http://www.stwno.de/infomax/daten-extern/html/speiseplaene.php?einrichtung=UNI-P')
 
 @app.route('/strings.sh')
+@app.route('/bash-strings')
 def bash_string_manipulation():
     return static_redirect_handler('http://tldp.org/LDP/abs/html/string-manipulation.html')
 
@@ -147,6 +148,10 @@ def ipv6_unique_local_address():
 @app.route('/mac/<path:query>')
 def mac_address_vendor_lookup(query):
     return simple_query_handler('http://coffer.com/mac_find/?string=%s', query)
+
+@app.route('/denic/<path:query>')
+def denic_web_whois(query):
+    return simple_query_handler('https://www.denic.de/webwhois-web20/?domain=%s', query)
 
 if __name__ == '__main__':
     app.run()
