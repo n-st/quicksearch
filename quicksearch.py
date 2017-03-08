@@ -63,7 +63,7 @@ def static_redirect_handler(url):
 
 def print_client_ip_handler():
     return Response(
-            request.remote_addr,
+            request.remote_addr + '\n',
             mimetype='text/plain'
             )
 
