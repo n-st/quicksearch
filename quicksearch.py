@@ -153,5 +153,9 @@ def mac_address_vendor_lookup(query):
 def denic_web_whois(query):
     return simple_query_handler('https://www.denic.de/webwhois-web20/?domain=%s', query)
 
+@app.route('/ssll/<path:query>')
+def ssllabs(query):
+    return simple_query_handler('https://www.ssllabs.com/ssltest/analyze.html?d=%s&hideResults=on&latest', query)
+
 if __name__ == '__main__':
     app.run()
