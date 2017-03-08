@@ -61,6 +61,16 @@ def simple_query_handler(url, query):
 def static_redirect_handler(url):
     return redirect(url, code=303)
 
+def print_client_ip_handler():
+    return Response(
+            request.remote_addr,
+            mimetype='text/plain'
+            )
+
+@app.route('/ip')
+def whats_my_ip():
+    return print_client_ip_handler()
+
 @app.route('/google/<path:query>')
 @app.route('/g/<path:query>')
 def google(query):
