@@ -174,5 +174,13 @@ def wolfram_alpha(query):
 def dict_cc(query):
     return simple_query_handler('https://www.dict.cc/?s=%s', query)
 
+@app.route('/gif/<path:query>')
+def giphy(query):
+    return simple_query_handler('http://giphy.com/search/%s', query)
+
+@app.route('/fp')
+def facepalm():
+    return static_redirect_handler('http://i3.kym-cdn.com/photos/images/original/000/001/582/picard-facepalm.jpg')
+
 if __name__ == '__main__':
     app.run()
