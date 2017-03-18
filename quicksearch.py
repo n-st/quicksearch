@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# encoding: utf-8 (as per PEP 263)
 
 from flask import Flask, Response, redirect, request, url_for
 from werkzeug.contrib.fixers import ProxyFix
