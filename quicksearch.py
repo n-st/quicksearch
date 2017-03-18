@@ -170,5 +170,9 @@ def tldlist_tld_info(query):
 def wolfram_alpha(query):
     return simple_query_handler('https://www.wolframalpha.com/input/?i=%s', query)
 
+@app.route('/dcc/<path:query>')
+def dict_cc(query):
+    return simple_query_handler('https://www.dict.cc/?s=%s', query)
+
 if __name__ == '__main__':
     app.run()
