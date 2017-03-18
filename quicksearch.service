@@ -4,8 +4,12 @@ Requires=network.target
 After=network.target
 
 [Service]
+Environment=PYTHONPATH=/opt/quicksearch/
+Environment=QUICKSEARCH_PORT=5000
+Environment=QUICKSEARCH_HOST=127.0.0.1
+
 Type=simple
-ExecStart=/opt/quicksearch/quicksearch.py
+ExecStart=/usr/sbin/twistd --nodaemon web --port "tcp:${QUICKSEARCH_PORT}:${QUICKSEARCH_HOST}" --wsgi quicksearch.app
 KillMode=mixed
 Restart=always
 
