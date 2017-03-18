@@ -26,27 +26,27 @@ Setup
 
 1. Clone repo to `/opt`
 
-      git clone https://github.com/n-st/quicksearch.git /opt/quicksearch
+       git clone https://github.com/n-st/quicksearch.git /opt/quicksearch
 
 2. Install requirements
 
-      pip3 install -U flask twisted
+       pip3 install -U flask twisted
 
 3. Copy `quicksearch.service` to your systemd service directory
 
-      cp /opt/quicksearch/quicksearch.service /etc/systemd/system
+       cp /opt/quicksearch/quicksearch.service /etc/systemd/system
 
 4. Check where `pip` installed `twistd` on your system,
    adjust path in service file if necessary
 
-      which twistd
-      vim /etc/systemd/system/quicksearch.service
+       which twistd
+       vim /etc/systemd/system/quicksearch.service
 
 5. Adapt path, port, and bindhost settings to your needs
 
-      grep Environment= /etc/systemd/system/quicksearch.service
-      vim /etc/systemd/system/quicksearch.service
+       grep Environment= /etc/systemd/system/quicksearch.service
+       vim /etc/systemd/system/quicksearch.service
 
 6. Enabled and start service
 
-      systemctl enable --now quicksearch.service
+       systemctl enable --now quicksearch.service
