@@ -166,5 +166,9 @@ def hurricane_electric_bgp(query):
 def tldlist_tld_info(query):
     return simple_query_handler('https://tld-list.com/tld/%s', query)
 
+@app.route('/woa/<path:query>')
+def wolfram_alpha(query):
+    return simple_query_handler('https://www.wolframalpha.com/input/?i=%s', query)
+
 if __name__ == '__main__':
     app.run()
