@@ -157,5 +157,9 @@ def denic_web_whois(query):
 def ssllabs(query):
     return simple_query_handler('https://www.ssllabs.com/ssltest/analyze.html?d=%s&hideResults=on&latest', query)
 
+@app.route('/bgp/<path:query>')
+def hurricane_electric_bgp(query):
+    return simple_query_handler('http://bgp.he.net/search?commit=Search&search[search]=%s', query)
+
 if __name__ == '__main__':
     app.run()
