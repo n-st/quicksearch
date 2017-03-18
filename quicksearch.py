@@ -161,5 +161,9 @@ def ssllabs(query):
 def hurricane_electric_bgp(query):
     return simple_query_handler('http://bgp.he.net/search?commit=Search&search[search]=%s', query)
 
+@app.route('/tld/<path:query>')
+def tldlist_tld_info(query):
+    return simple_query_handler('https://tld-list.com/tld/%s', query)
+
 if __name__ == '__main__':
     app.run()
