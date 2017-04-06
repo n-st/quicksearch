@@ -182,5 +182,9 @@ def giphy(query):
 def facepalm():
     return static_redirect_handler('http://i3.kym-cdn.com/photos/images/original/000/001/582/picard-facepalm.jpg')
 
+@app.route('/randname')
+def randname():
+    return static_redirect_handler('http://www.behindthename.com/random/random.php?number=1&gender=u&surname=&nodiminutives=yes&all=yes')
+
 if __name__ == '__main__':
     app.run()
