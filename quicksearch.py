@@ -186,5 +186,9 @@ def facepalm():
 def randname():
     return static_redirect_handler('http://www.behindthename.com/random/random.php?number=1&gender=u&surname=&nodiminutives=yes&all=yes')
 
+@app.route('/hps/<float:query>')
+def xmr_mining_calculator(query):
+    return simple_query_handler('https://www.cryptocompare.com/mining/calculator/xmr?HashingPower=%s&HashingUnit=H%2Fs&PowerConsumption=0', query)
+
 if __name__ == '__main__':
     app.run()
