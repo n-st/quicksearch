@@ -190,5 +190,9 @@ def randname():
 def xmr_mining_calculator(query):
     return simple_query_handler('https://www.cryptocompare.com/mining/calculator/xmr?HashingPower=%s&HashingUnit=H%2Fs&PowerConsumption=0', query)
 
+@app.route('/ukcomp/<path:query>')
+def uk_company_registrations(query):
+    return simple_query_handler('https://beta.companieshouse.gov.uk/search?q=%s', query)
+
 if __name__ == '__main__':
     app.run()
