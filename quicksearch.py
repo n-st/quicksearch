@@ -194,5 +194,10 @@ def xmr_mining_calculator(query):
 def uk_company_registrations(query):
     return simple_query_handler('https://beta.companieshouse.gov.uk/search?q=%s', query)
 
+@app.route('/uci/<path:query>')
+@app.route('/unicode/<path:query>')
+def unicode_character_inspector(query):
+    return simple_query_handler('https://apps.timwhitlock.info/unicode/inspect?s=%s', query)
+
 if __name__ == '__main__':
     app.run()
