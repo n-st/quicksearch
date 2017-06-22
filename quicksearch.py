@@ -199,5 +199,14 @@ def uk_company_registrations(query):
 def unicode_character_inspector(query):
     return simple_query_handler('https://apps.timwhitlock.info/unicode/inspect?s=%s', query)
 
+@app.route('/wiki/<path:query>')
+@app.route('/enwiki/<path:query>')
+def wikipedia_en(query):
+    return simple_query_handler('https://en.wikipedia.org/w/index.php?search=%s', query)
+
+@app.route('/dewiki/<path:query>')
+def wikipedia_de(query):
+    return simple_query_handler('https://de.wikipedia.org/w/index.php?search=%s', query)
+
 if __name__ == '__main__':
     app.run()
