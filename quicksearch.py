@@ -144,7 +144,7 @@ def bash_string_manipulation():
 
 @app.route('/ula')
 def ipv6_unique_local_address():
-    return static_redirect_handler('http://unique-local-ipv6.com/')
+    return static_redirect_handler('http://simpledns.com/private-ipv6.aspx')
 
 @app.route('/mac/<path:query>')
 def mac_address_vendor_lookup(query):
