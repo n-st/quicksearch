@@ -208,5 +208,13 @@ def wikipedia_en(query):
 def wikipedia_de(query):
     return simple_query_handler('https://de.wikipedia.org/w/index.php?search=%s', query)
 
+@app.route('/rfc/<int:query>')
+def rfc_by_number(query):
+    return simple_query_handler('https://tools.ietf.org/html/rfc%s', str(query))
+
+@app.route('/rfc/<path:query>')
+def rfc_text_search(query):
+    return simple_query_handler('https://tools.ietf.org/googleresults?q=%s', query)
+
 if __name__ == '__main__':
     app.run()
