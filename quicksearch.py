@@ -199,6 +199,11 @@ def uk_company_registrations(query):
 def unicode_character_inspector(query):
     return simple_query_handler('https://apps.timwhitlock.info/unicode/inspect?s=%s', query)
 
+@app.route('/ucs/<path:query>')
+@app.route('/sunicode/<path:query>')
+def unicode_character_search(query):
+    return simple_query_handler('http://www.fileformat.info/info/unicode/char/search.htm?q=%s&preview=entity', query)
+
 @app.route('/wiki/<path:query>')
 @app.route('/enwiki/<path:query>')
 def wikipedia_en(query):
