@@ -5,6 +5,7 @@ from flask import Flask, Response, redirect, request, url_for
 from werkzeug.contrib.fixers import ProxyFix
 from urllib.parse import quote, quote_plus, unquote, unquote_plus
 import re
+import ipaddress
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
@@ -63,8 +64,13 @@ def static_redirect_handler(url):
     return redirect(url, code=303)
 
 def print_client_ip_handler():
+    addr = ipaddress.ip_address(request.remote_addr)
+
+    if type(addr) == ipaddress.IPv6Address and addr.ipv4_mapped:
+        addr = addr.ipv4_mapped
+
     return Response(
-            request.remote_addr + '\n',
+            str(addr) + '\n',
             mimetype='text/plain'
             )
 
