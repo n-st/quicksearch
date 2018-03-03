@@ -50,7 +50,7 @@ def root():
 
     return Response(
             '\n'.join(response_lines),
-            mimetype='text/markdown'
+            mimetype='text/plain'
             )
 
 def simple_query_handler(url, query):
