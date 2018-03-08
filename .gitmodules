@@ -1,0 +1,3 @@
+[submodule "telnum"]
+	path = telnum
+	url = https://github.com/n-st/telnum.git

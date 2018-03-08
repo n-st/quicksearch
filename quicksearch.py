@@ -6,6 +6,11 @@ from werkzeug.contrib.fixers import ProxyFix
 from urllib.parse import quote, quote_plus, unquote, unquote_plus
 import re
 import ipaddress
+try:
+    import telnum
+except:
+    import sys
+    sys.stderr.write('Could not import telnum module. Telnum functionality will be disabled.\n')
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
@@ -73,6 +78,23 @@ def print_client_ip_handler():
             str(addr) + '\n',
             mimetype='text/plain'
             )
+
+try:
+    import telnum
+
+    def telnum_info_handler(num):
+        return Response(
+                telnum.number_to_text(num) + '\n',
+                mimetype='text/plain'
+                )
+
+    @app.route('/telnum/<path:num>')
+    def phone_number_info(num):
+        return telnum_info_handler(num)
+
+except:
+    # Oh well.
+    pass
 
 @app.route('/ip')
 def whats_my_ip():
