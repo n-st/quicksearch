@@ -12,14 +12,15 @@ convenience?
 same way — except it runs as a webserver and is thus usable from any browser
 anywhere. (If you've got a domain to run it on, that is.)
 
-That query from above would become something like `qrs.ovh/woa/velocity of
+That query from above would become something like `jjj.re/woa/velocity of
 unladen swallow`. Not quite as convenient as your in-browser keywords, but
 certainly faster than typing `wolframalpha.com` and waiting for 3.4 MB of
 website to load just so you can type in your query.
 
 Want to check out my stock version?  
-There are publicly accessible instances at [qrs.ovh](http://qrs.ovh/) and
-[jjjkm.win](http://jjjkm.win/).
+There is a publicly accessible instance at [jjj.re](http://jjj.re/).  
+(The site intentionally does not perform a redirect to HTTPS to save roundtrips
+and thus time.)
 
 Setup
 -----
