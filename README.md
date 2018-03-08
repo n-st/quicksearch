@@ -27,11 +27,13 @@ Setup
 
 1. Clone repo to `/opt`
 
-       git clone https://github.com/n-st/quicksearch.git /opt/quicksearch
+       git clone --recursive https://github.com/n-st/quicksearch.git /opt/quicksearch
 
 2. Install requirements
 
        pip3 install -U flask twisted
+       # Optionally, for phone number analysis:
+       pip3 install -U phonenumbers
 
 3. Copy `quicksearch.service` to your systemd service directory
 
@@ -51,3 +53,22 @@ Setup
 6. Enabled and start service
 
        systemctl enable --now quicksearch.service
+
+Non-redirect functionality
+--------------------------
+
+Over time, `quicksearch` evolved to also contain a few additional features
+beyond mere search redirections:
+
+- `/ip`  
+  Print the IP address from which the user is connecting:
+
+      203.0.113.89
+  or
+      2001:db8:78a3:9889:5bd1:b3e5:bb52:ed80
+
+- `/telnum/+442072343456` or `/telnum/442072343456`  
+  Print information about the phone number's origin country, region, and type:
+
+      +44 20 7234 3456
+      London, United Kingdom - fixed-line
