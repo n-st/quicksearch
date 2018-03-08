@@ -161,6 +161,11 @@ def packages_archuserrepo(query):
 def packages_freebsd_freshports(query):
     return simple_query_handler('https://www.freshports.org/search.php?num=20&query=%s', query)
 
+@app.route('/gpkg/<path:query>')
+@app.route('/eix/<path:query>')
+def packages_gentoo(query):
+    return simple_query_handler('https://packages.gentoo.org/packages/search?q=%s', query)
+
 @app.route('/mensa')
 def mensa_uni_passau():
     return static_redirect_handler('http://www.stwno.de/infomax/daten-extern/html/speiseplaene.php?einrichtung=UNI-P')
