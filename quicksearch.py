@@ -11,6 +11,11 @@ try:
 except:
     import sys
     sys.stderr.write('Could not import telnum module. Telnum functionality will be disabled.\n')
+try:
+    import ula
+except:
+    import sys
+    sys.stderr.write('Could not import ula module. ULA functionality will be disabled.\n')
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
@@ -96,6 +101,24 @@ except:
     # Oh well.
     pass
 
+try:
+    import ula
+
+    @app.route('/ula')
+    def ipv6_unique_local_address():
+        return Response(
+                str(ula.generate_ula()) + '\n',
+                mimetype='text/plain'
+                )
+
+except:
+    # Oh well.
+    pass
+
+@app.route('/ula.ext')
+def ipv6_unique_local_address_external():
+    return static_redirect_handler('http://simpledns.com/private-ipv6.aspx')
+
 @app.route('/ip')
 def whats_my_ip():
     return print_client_ip_handler()
@@ -174,10 +197,6 @@ def mensa_uni_passau():
 @app.route('/bash-strings')
 def bash_string_manipulation():
     return static_redirect_handler('http://tldp.org/LDP/abs/html/string-manipulation.html')
-
-@app.route('/ula')
-def ipv6_unique_local_address():
-    return static_redirect_handler('http://simpledns.com/private-ipv6.aspx')
 
 @app.route('/mac/<path:query>')
 def mac_address_vendor_lookup(query):

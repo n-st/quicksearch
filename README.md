@@ -72,3 +72,10 @@ beyond mere search redirections:
 
       +44 20 7234 3456
       London, United Kingdom - fixed-line
+
+- `/ula`  
+  Generate a Unique Local IPv6 Unicast Address (ULA) according to the algorithm
+  in RFC 4193, section 3.2.2.  
+  The output is the network address (all host bits set to zero) of the ULA /48:
+
+      fd6c:e2c3:fb9c::

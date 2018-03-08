@@ -1,3 +1,6 @@
 [submodule "telnum"]
 	path = telnum
 	url = https://github.com/n-st/telnum.git
+[submodule "python-ula"]
+	path = python-ula
+	url = https://github.com/n-st/python-ula.git
