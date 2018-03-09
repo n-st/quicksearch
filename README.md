@@ -64,7 +64,9 @@ beyond mere search redirections:
   Print the IP address from which the user is connecting:
 
       203.0.113.89
+
   or
+
       2001:db8:78a3:9889:5bd1:b3e5:bb52:ed80
 
 - `/telnum/+442072343456` or `/telnum/442072343456`  
