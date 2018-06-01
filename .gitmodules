@@ -4,3 +4,6 @@
 [submodule "python-ula"]
 	path = python-ula
 	url = https://github.com/n-st/python-ula.git
+[submodule "gitignore"]
+	path = github-gitignore
+	url = https://github.com/github/gitignore.git

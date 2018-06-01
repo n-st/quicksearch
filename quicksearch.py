@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # encoding: utf-8 (as per PEP 263)
 
-from flask import Flask, Response, redirect, request, url_for
+from flask import Flask, Response, abort, redirect, request, send_file, url_for
 from werkzeug.contrib.fixers import ProxyFix
 from urllib.parse import quote, quote_plus, unquote, unquote_plus
+import os
+import glob
 import re
 import ipaddress
 try:
@@ -114,6 +116,22 @@ try:
 except:
     # Oh well.
     pass
+
+
+if os.path.isdir('github-gitignore'):
+    @app.route('/gitignore/<string:query>')
+    @app.route('/ignore/<string:query>')
+    def gitignore_template(query):
+        query_filename = '%s.gitignore' % query
+        for filename in glob.glob('github-gitignore/*.gitignore') + glob.glob('github-gitignore/Global/*.gitignore'):
+            if filename.lower().endswith(query_filename.lower()):
+                return send_file(filename, mimetype='text/plain')
+        # If we get this far, nothing was found:
+        return Response(
+                '# No gitignore file found for "%s"\n' % query,
+                mimetype='text/plain'
+                ), 404
+
 
 @app.route('/ula.ext')
 def ipv6_unique_local_address_external():
