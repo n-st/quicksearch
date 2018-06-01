@@ -117,13 +117,14 @@ except:
     # Oh well.
     pass
 
+GITIGNORE_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'github-gitignore')
 
-if os.path.isdir('github-gitignore'):
+if os.path.isdir(GITIGNORE_PATH):
     @app.route('/gitignore/<string:query>')
     @app.route('/ignore/<string:query>')
     def gitignore_template(query):
         query_filename = '%s.gitignore' % query
-        for filename in glob.glob('github-gitignore/*.gitignore') + glob.glob('github-gitignore/Global/*.gitignore'):
+        for filename in glob.glob(os.path.join(GITIGNORE_PATH, '*.gitignore')) + glob.glob(os.path.join(GITIGNORE_PATH, 'Global', '*.gitignore')):
             if filename.lower().endswith(query_filename.lower()):
                 return send_file(filename, mimetype='text/plain')
         # If we get this far, nothing was found:
