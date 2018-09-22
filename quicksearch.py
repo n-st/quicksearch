@@ -61,7 +61,7 @@ def root():
         response_lines += sorted(redirects)
 
     return Response(
-            '\n'.join(response_lines),
+            '\n'.join(response_lines)+'\n',
             mimetype='text/plain'
             )
 
