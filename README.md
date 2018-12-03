@@ -34,6 +34,8 @@ Setup
        pip3 install -U flask twisted
        # Optionally, for phone number analysis:
        pip3 install -U phonenumbers
+       # Optionally, for MAC/OUI lookup:
+       wget -O data/oui.txt http://standards-oui.ieee.org/oui.txt
 
 3. Copy `quicksearch.service` to your systemd service directory
 
@@ -68,6 +70,11 @@ beyond mere search redirections:
   or
 
       2001:db8:78a3:9889:5bd1:b3e5:bb52:ed80
+
+- `/mac/48-2C-6A-1E-59-3D` or `/oui/48-2C-6A-1E-59-3D`
+  Look up which organization this OUI is registered to.  
+  Also supports other formats, e.g. `48-2C-6A-1E-59-3D`, `48:2C:6A:1E:59:3D`,
+  `482c6a`, etc.
 
 - `/telnum/+442072343456` or `/telnum/442072343456`  
   Print information about the phone number's origin country, region, and type:

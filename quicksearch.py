@@ -118,6 +118,7 @@ except:
     pass
 
 GITIGNORE_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'github-gitignore')
+OUI_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', 'oui.txt')
 
 if os.path.isdir(GITIGNORE_PATH):
     @app.route('/gitignore/<string:query>')
@@ -130,6 +131,54 @@ if os.path.isdir(GITIGNORE_PATH):
         # If we get this far, nothing was found:
         return Response(
                 '# No gitignore file found for "%s"\n' % query,
+                mimetype='text/plain'
+                ), 404
+
+if os.path.isfile(OUI_PATH):
+    @app.route('/mac/<string:query>')
+    @app.route('/oui/<string:query>')
+    def oui_lookup(query):
+        if not os.path.isfile(OUI_PATH):
+            return Response(
+                    'Error\nOUI file missing\n',
+                    mimetype='text/plain'
+                    ), 500
+
+        # transform OUI into format 3C-D9-2B
+        match = re.match('^([0-9A-Fa-f]{2})[:-]?([0-9A-Fa-f]{2})[:-]?([0-9A-Fa-f]{2})', query)
+        if not match:
+            return Response(
+                    'Error\nInvalid input (not an EUI)\n',
+                    mimetype='text/plain'
+                    ), 400
+
+        oui = '%s-%s-%s' % match.groups()
+        oui = oui.upper()
+
+        octet1 = int(match.group(1), 16)
+        if octet1 & (1<<1):
+            return Response(
+                    '%s\nlocally administered address\n' % (oui),
+                    mimetype='text/plain'
+                    ), 200
+
+        with open(OUI_PATH, 'r') as f:
+            for line in f:
+                if line.startswith(oui):
+                    parts = line.split(maxsplit=2)
+                    if len(parts) != 3:
+                        return Response(
+                                'Error\nFormat error in OUI file\n',
+                                mimetype='text/plain'
+                                ), 500
+                    organization = parts[-1]
+                    return Response(
+                            '%s\n%s\n' % (oui, organization),
+                            mimetype='text/plain'
+                            ), 200
+
+        return Response(
+                '%s\nNo organisation found\n' % oui,
                 mimetype='text/plain'
                 ), 404
 
