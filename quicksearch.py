@@ -182,6 +182,12 @@ if os.path.isfile(OUI_PATH):
                 mimetype='text/plain'
                 ), 404
 
+else:
+    @app.route('/mac/<path:query>')
+    @app.route('/oui/<path:query>')
+    def mac_address_vendor_lookup(query):
+        return simple_query_handler('http://coffer.com/mac_find/?string=%s', query)
+
 
 @app.route('/ula.ext')
 def ipv6_unique_local_address_external():
@@ -273,10 +279,6 @@ def mensa_uni_passau():
 @app.route('/bash-strings')
 def bash_string_manipulation():
     return static_redirect_handler('http://tldp.org/LDP/abs/html/string-manipulation.html')
-
-@app.route('/mac/<path:query>')
-def mac_address_vendor_lookup(query):
-    return simple_query_handler('http://coffer.com/mac_find/?string=%s', query)
 
 @app.route('/denic/<path:query>')
 def denic_web_whois(query):
