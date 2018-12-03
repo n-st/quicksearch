@@ -93,4 +93,5 @@ Todos / Possible improvements
 -----------------------------
 
 - [ ] Show the last-updated date of the OUI file (from file modification date)
+- [ ] Support IABs in OUI lookup
 - [ ] Use netaddr for MAC parsing and (fallback) OUI lookup
