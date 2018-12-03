@@ -88,3 +88,9 @@ beyond mere search redirections:
   The output is the network address (all host bits set to zero) of the ULA /48:
 
       fd6c:e2c3:fb9c::
+
+Todos / Possible improvements
+-----------------------------
+
+- [ ] Show the last-updated date of the OUI file (from file modification date)
+- [ ] Use netaddr for MAC parsing and (fallback) OUI lookup
