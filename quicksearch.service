@@ -9,7 +9,7 @@ Environment=QUICKSEARCH_PORT=5000
 Environment=QUICKSEARCH_HOST=127.0.0.1
 
 Type=simple
-ExecStart=/usr/sbin/twistd --nodaemon web --port "tcp:${QUICKSEARCH_PORT}:${QUICKSEARCH_HOST}" --wsgi quicksearch.app
+ExecStart=/usr/sbin/twistd3 --nodaemon web --port "tcp:${QUICKSEARCH_PORT}:${QUICKSEARCH_HOST}" --wsgi quicksearch.app
 KillMode=mixed
 Restart=always
 
