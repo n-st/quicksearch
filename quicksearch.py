@@ -253,7 +253,7 @@ def packages_archuserrepo(query):
     return simple_query_handler('https://aur.archlinux.org/packages/?K=%s', query)
 
 @app.route('/repo')
-def packages_repology_stats(query):
+def packages_repology_stats():
     return static_redirect_handler('https://repology.org/repositories/statistics')
 
 @app.route('/repo/<path:query>')
