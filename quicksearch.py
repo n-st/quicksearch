@@ -258,7 +258,7 @@ def packages_repology_stats():
 
 @app.route('/repo/<path:query>')
 def packages_repology_search(query):
-    return simple_query_handler('https://repology.org/metapackages/?search=%s', query)
+    return simple_query_handler('https://repology.org/projects/?search=%s', query)
 
 @app.route('/fport/<path:query>')
 @app.route('/fports/<path:query>')
