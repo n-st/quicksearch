@@ -351,5 +351,9 @@ def rfc_by_number(query):
 def rfc_text_search(query):
     return simple_query_handler('https://tools.ietf.org/googleresults?q=%s', query)
 
+@app.route('/ark/<path:query>')
+def intel_ark(query):
+    return simple_query_handler('https://ark.intel.com/content/www/us/en/ark/search.html?q=%s', query)
+
 if __name__ == '__main__':
     app.run()
