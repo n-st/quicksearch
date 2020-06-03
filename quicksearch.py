@@ -203,7 +203,7 @@ def url_clean(query):
 
     # Google URL format:
     # https://www.google.com/url?sa=t&source=web&rct=j&url=https://www.example.com/page%3Fparam%3Dvalue&ved=2ahUKEwiY3OaWh-XpAhXytYsKHZSOBaAQwqsBMAF6BAgHEAg&usg=AOvVaw2r6f5XJRxROXt-aRr_r3lI
-    match = re.match('^https://www.google.com/url?.*url=([^&]+)', query)
+    match = re.match(r'^https?://www\.google\.com/url?.*url=([^&]+)', query)
     if match:
         url = unquote(match.group(1))
 
@@ -212,7 +212,7 @@ def url_clean(query):
     # -> https://www.theregister.co.uk/2015/09/15/still_200k_iot_heartbleed_vulns/
     # https://www.google.com/amp/s/www.golem.de/news/fuzzing-wie-man-heartbleed-haette-finden-koennen-1504-113345.amp.html
     # -> https://www.golem.de/news/fuzzing-wie-man-heartbleed-haette-finden-koennen-1504-113345.html
-    match = re.match('^(https://)www.google.com/amp/s/(.+)', query)
+    match = re.match(r'^(https?://)www\.google\.com/amp/s/(.+)', query)
     if match:
         url = match.group(1) + match.group(2)
         url = re.sub(r'([^a-zA-Z0-9])[Aa][Mm][Pp]\1', r'\1', url)
