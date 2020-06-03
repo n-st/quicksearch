@@ -231,6 +231,14 @@ def url_clean(query):
                 mimetype='text/plain'
                 ), 200
 
+@app.route('/urldecode/<path:query>')
+@app.route('/ud/<path:query>')
+def urldecode(query):
+    return Response(
+            '%s\n' % (unquote(query)),
+            mimetype='text/plain'
+            ), 200
+
 @app.route('/ula.ext')
 def ipv6_unique_local_address_external():
     return static_redirect_handler('http://simpledns.com/private-ipv6.aspx')
