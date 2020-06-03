@@ -189,6 +189,48 @@ else:
         return simple_query_handler('http://coffer.com/mac_find/?string=%s', query)
 
 
+@app.route('/clean/<path:query>')
+@app.route('/cleango/<path:query>')
+@app.route('/go/<path:query>')
+def url_clean(query):
+    # re-add GET parameters to query URL that will be parsed
+    if request.query_string:
+        query += '?' + request.query_string.decode('utf-8')
+
+    print(query)
+
+    url = None
+
+    # Google URL format:
+    # https://www.google.com/url?sa=t&source=web&rct=j&url=https://www.example.com/page%3Fparam%3Dvalue&ved=2ahUKEwiY3OaWh-XpAhXytYsKHZSOBaAQwqsBMAF6BAgHEAg&usg=AOvVaw2r6f5XJRxROXt-aRr_r3lI
+    match = re.match('^https://www.google.com/url?.*url=([^&]+)', query)
+    if match:
+        url = unquote(match.group(1))
+
+    # AMP URL format:
+    # https://www.google.com/amp/s/www.theregister.co.uk/AMP/2015/09/15/still_200k_iot_heartbleed_vulns/
+    # -> https://www.theregister.co.uk/2015/09/15/still_200k_iot_heartbleed_vulns/
+    # https://www.google.com/amp/s/www.golem.de/news/fuzzing-wie-man-heartbleed-haette-finden-koennen-1504-113345.amp.html
+    # -> https://www.golem.de/news/fuzzing-wie-man-heartbleed-haette-finden-koennen-1504-113345.html
+    match = re.match('^(https://)www.google.com/amp/s/(.+)', query)
+    if match:
+        url = match.group(1) + match.group(2)
+        url = re.sub(r'([^a-zA-Z0-9])[Aa][Mm][Pp]\1', r'\1', url)
+
+    if not url:
+        return Response(
+                'Error\nInvalid input (URL format not recognised)\n',
+                mimetype='text/plain'
+                ), 400
+
+    if request.path.startswith('/cleango/') or request.path.startswith('/go/'):
+        return static_redirect_handler(url)
+    else:
+        return Response(
+                '%s\n' % (url),
+                mimetype='text/plain'
+                ), 200
+
 @app.route('/ula.ext')
 def ipv6_unique_local_address_external():
     return static_redirect_handler('http://simpledns.com/private-ipv6.aspx')
