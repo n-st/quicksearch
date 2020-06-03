@@ -239,6 +239,19 @@ def urldecode(query):
             mimetype='text/plain'
             ), 200
 
+@app.route('/urlencode/<path:query>')
+@app.route('/ue/<path:query>')
+def urlencode(query):
+    if request.query_string:
+        query += '?' + request.query_string.decode('utf-8')
+    return Response(
+            # Browser automatically quote some characters, so we need to
+            # unquote them to get a uniform (completely unquoted) starting
+            # point
+            '%s\n' % (quote(unquote(query))),
+            mimetype='text/plain'
+            ), 200
+
 @app.route('/ula.ext')
 def ipv6_unique_local_address_external():
     return static_redirect_handler('http://simpledns.com/private-ipv6.aspx')
