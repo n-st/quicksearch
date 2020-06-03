@@ -217,6 +217,12 @@ def url_clean(query):
         url = match.group(1) + match.group(2)
         url = re.sub(r'([^a-zA-Z0-9])[Aa][Mm][Pp]\1', r'\1', url)
 
+    # Amazon URL format:
+    # https://www.amazon.de/DSLRKIT-Ethernet-Splitter-Development-Raspberry/dp/B074Y6M67F/ref=foo_bar_1234_0?_encoding=UTF8&etcpp
+    match = re.match(r'^(https://)(www\.|smile\.)?amazon\.([a-z]{2,3})/.*dp/([A-Z0-9]{10}/)', query)
+    if match:
+        url = match.group(1) + 'www.amazon.' + match.group(3) + '/dp/' + match.group(4)
+
     if not url:
         return Response(
                 'Error\nInvalid input (URL format not recognised)\n',
