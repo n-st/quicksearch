@@ -435,7 +435,7 @@ def posix_2008():
 
 @app.route('/posix/<path:query>')
 @app.route('/posix2008/<path:query>')
-def posix_2008_lookup():
+def posix_2008_lookup(query):
     if len(query) == 1:
         return static_redirect_handler('https://pubs.opengroup.org/onlinepubs/9699919799.2008edition/idx/i%s.html' % (query))
     else:
