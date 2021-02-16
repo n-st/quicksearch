@@ -344,10 +344,14 @@ def packages_gentoo(query):
 def mensa_uni_passau():
     return static_redirect_handler('http://www.stwno.de/infomax/daten-extern/html/speiseplaene.php?einrichtung=UNI-P')
 
-@app.route('/strings.sh')
+@app.route('/strings.bash')
 @app.route('/bash-strings')
-def bash_string_manipulation():
+def string_manipulation_bash():
     return static_redirect_handler('http://tldp.org/LDP/abs/html/string-manipulation.html')
+
+@app.route('/strings.sh')
+def string_manipulation_posix():
+    return static_redirect_handler('https://pubs.opengroup.org/onlinepubs/9699919799.2008edition/utilities/V3_chap02.html#tag_18_06_02')
 
 @app.route('/denic/<path:query>')
 def denic_web_whois(query):
@@ -423,6 +427,19 @@ def rfc_text_search(query):
 @app.route('/ark/<path:query>')
 def intel_ark(query):
     return simple_query_handler('https://ark.intel.com/content/www/us/en/ark/search.html?q=%s', query)
+
+@app.route('/posix')
+@app.route('/posix2008')
+def posix_2008():
+    return static_redirect_handler('https://pubs.opengroup.org/onlinepubs/9699919799.2008edition/')
+
+@app.route('/posix/<path:query>')
+@app.route('/posix2008/<path:query>')
+def posix_2008_lookup():
+    if len(query) == 1:
+        return static_redirect_handler('https://pubs.opengroup.org/onlinepubs/9699919799.2008edition/idx/i%s.html' % (query))
+    else:
+        return static_redirect_handler('https://pubs.opengroup.org/onlinepubs/9699919799.2008edition/utilities/%s.html' % (query))
 
 if __name__ == '__main__':
     app.run()
