@@ -441,5 +441,9 @@ def posix_2008_lookup():
     else:
         return static_redirect_handler('https://pubs.opengroup.org/onlinepubs/9699919799.2008edition/utilities/%s.html' % (query))
 
+@app.route('/ansible/<path:query>')
+def ansible_module(query):
+    return simple_query_handler('https://docs.ansible.com/ansible/latest/modules/%s_module.html', query)
+
 if __name__ == '__main__':
     app.run()
