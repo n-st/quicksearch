@@ -4,12 +4,10 @@ Requires=network.target
 After=network.target
 
 [Service]
-Environment=PYTHONPATH=/opt/quicksearch/
-Environment=QUICKSEARCH_PORT=5000
-Environment=QUICKSEARCH_HOST=127.0.0.1
+EnvironmentFile=/etc/quicksearch.conf
 
 Type=simple
-ExecStart=/usr/sbin/twistd3 --nodaemon web --port "tcp:${QUICKSEARCH_PORT}:${QUICKSEARCH_HOST}" --wsgi quicksearch.app
+ExecStart=/usr/bin/env twistd3 --nodaemon --uid "${QUICKSEARCH_USER}" --gid nogroup --pidfile "${PIDFILE}" web --listen "${QUICKSEARCH_HTTP_LISTEN}" --wsgi quicksearch.app
 KillMode=mixed
 Restart=always
 
