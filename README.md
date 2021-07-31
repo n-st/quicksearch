@@ -37,14 +37,17 @@ Setup
        # Optionally, for MAC/OUI lookup:
        wget -O data/oui.txt http://standards-oui.ieee.org/oui.txt
 
+       # On Debian, you can instead use the (slightly older) versions from the official package repository:
+       apt install python3-flask python3-twisted python3-phonenumbers
+
 3. Copy `quicksearch.service` to your systemd service directory
 
        cp /opt/quicksearch/quicksearch.service /etc/systemd/system
 
-4. Check where `pip` installed `twistd` on your system,
+4. Check where `pip` installed `twistd3` on your system,
    adjust path in service file if necessary
 
-       which twistd
+       which twistd3
        vim /etc/systemd/system/quicksearch.service
 
 5. Adapt path, port, and bindhost settings to your needs
