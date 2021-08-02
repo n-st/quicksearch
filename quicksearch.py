@@ -2,7 +2,12 @@
 # encoding: utf-8 (as per PEP 263)
 
 from flask import Flask, Response, abort, redirect, request, send_file, url_for
-from werkzeug.middleware.proxy_fix import ProxyFix
+try:
+    # Werkzeug >= 0.15.0
+    from werkzeug.middleware.proxy_fix import ProxyFix
+except:
+    # Werkzeug < 0.15.0
+    from werkzeug.contrib.fixers import ProxyFix
 from urllib.parse import quote, quote_plus, unquote, unquote_plus
 import os
 import glob
