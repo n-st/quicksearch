@@ -94,15 +94,24 @@ def print_client_ip_handler():
 try:
     import telnum
 
-    def telnum_info_handler(num):
-        return Response(
-                telnum.number_to_text(num) + '\n',
-                mimetype='text/plain'
-                )
-
     @app.route('/telnum/<path:num>')
-    def phone_number_info(num):
-        return telnum_info_handler(num)
+    def phone_number_info(num, wikipedia=False):
+        result = telnum.number_to_text(num)
+        parts = result.split()
+        if wikipedia and parts[-1] != 'invalid':
+            country_code = parts[0]
+            return static_redirect_handler('https://en.wikipedia.org/wiki/' + quote(country_code))
+
+        else:
+            return Response(
+                    result + '\n',
+                    mimetype='text/plain'
+                    )
+
+    @app.route('/telnum/<path:num>/wiki')
+    def phone_number_plan_wikipedia(num):
+        return phone_number_info(num, True)
+
 
 except:
     # Oh well.
