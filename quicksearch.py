@@ -161,9 +161,13 @@ if os.path.isfile(OUI_PATH):
         oui = oui.upper()
 
         octet1 = int(match.group(1), 16)
-        if octet1 & (1<<1):
+        locally_administered = (octet1 & (1<<1))
+        multicast = (octet1 & 1)
+        multicast_str = ', multicast' if multicast else ''
+
+        if locally_administered:
             return Response(
-                    '%s\nlocally administered address\n' % (oui),
+                    '%s\nlocally administered address%s\n' % (oui, multicast_str),
                     mimetype='text/plain'
                     ), 200
 
@@ -178,12 +182,12 @@ if os.path.isfile(OUI_PATH):
                                 ), 500
                     organization = parts[-1]
                     return Response(
-                            '%s\n%s\n' % (oui, organization),
+                            '%s\n%s%s\n' % (oui, organization, multicast_str),
                             mimetype='text/plain'
                             ), 200
 
         return Response(
-                '%s\nNo organisation found\n' % oui,
+                '%s\nNo organisation found%s\n' % (oui, multicast_str),
                 mimetype='text/plain'
                 ), 404
 
