@@ -463,5 +463,16 @@ def posix_2008_lookup(query):
 def ansible_module(query):
     return simple_query_handler('https://docs.ansible.com/ansible/latest/modules/%s_module.html', query)
 
+@app.route('/dhl/<string:piececode>')
+@app.route('/dhl/<string:piececode>/<string:zipcode>')
+def dhl_tracking(piececode, zipcode=''):
+    supported_languages = ["de", "en"]
+    language = request.accept_languages.best_match(supported_languages)
+
+    if zipcode:
+        return redirect('https://nolp.dhl.de/nextt-online-public/%s/search?piececode=%s&zip=%s' % (language, quote_plus(piececode), quote_plus(zipcode)), code=303)
+    else:
+        return redirect('https://nolp.dhl.de/nextt-online-public/%s/search?piececode=%s' % (language, quote_plus(piececode)), code=303)
+
 if __name__ == '__main__':
     app.run()
