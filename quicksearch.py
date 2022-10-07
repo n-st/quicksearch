@@ -23,6 +23,11 @@ try:
 except:
     import sys
     sys.stderr.write('Could not import ula module. ULA functionality will be disabled.\n')
+try:
+    from dns import resolver
+except:
+    import sys
+    sys.stderr.write('Could not import dnspython module. IP info functionality will be disabled.\n')
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
@@ -90,6 +95,75 @@ def print_client_ip_handler():
             str(addr) + '\n',
             mimetype='text/plain'
             )
+
+@app.route('/ip')
+def whats_my_ip():
+    return print_client_ip_handler()
+
+try:
+    from dns import resolver
+    def print_client_ip_info_handler():
+        addr = ipaddress.ip_address(request.remote_addr)
+
+        if type(addr) == ipaddress.IPv6Address and addr.ipv4_mapped:
+            addr = addr.ipv4_mapped
+
+        cymru_query = addr.reverse_pointer \
+            .replace('.ip6.arpa', '.origin6.asn.cymru.com') \
+            .replace('.in-addr.arpa', '.origin.asn.cymru.com')
+
+        result = []
+
+        if addr.version == 4:
+            addr_version = 'IPv4'
+        elif addr.version == 6:
+            addr_version = 'IPv6'
+        else:
+            addr_version = 'Address version unknown'
+
+        ptrs = '+'.join([record.to_text() for record in resolver.resolve_address(str(addr))])
+
+        result.append('%s | %s | %s' % (
+            addr_version,
+            str(addr),
+            ptrs))
+
+        try:
+            answer = resolver.resolve(cymru_query, 'TXT')
+        except Exception as e:
+            answer = ['No information available']
+
+        for record in answer:
+            text = str(record).strip('"')
+            result.append(text)
+            asn = text.split()[0]
+
+            try:
+                asn = int(asn)
+            except:
+                # skip non-numerical data (it's probably an error message)
+                continue
+
+            try:
+                answer2 = resolver.resolve(asn + '.asn.cymru.com', 'TXT')
+            except Exception as e:
+                answer2 = ['No information available']
+            for record2 in answer2:
+                text2 = str(record2).strip('"')
+                result.append(text2)
+
+        return Response(
+                '\n'.join(result) + '\n',
+                mimetype='text/plain'
+                )
+
+    @app.route('/ipi')
+    def whats_my_ip_info():
+        return print_client_ip_info_handler()
+
+except:
+    # Oh well.
+    pass
 
 try:
     import telnum
@@ -279,10 +353,6 @@ def urlencode(query):
 @app.route('/ula.ext')
 def ipv6_unique_local_address_external():
     return static_redirect_handler('http://simpledns.com/private-ipv6.aspx')
-
-@app.route('/ip')
-def whats_my_ip():
-    return print_client_ip_handler()
 
 @app.route('/google/<path:query>')
 @app.route('/g/<path:query>')
