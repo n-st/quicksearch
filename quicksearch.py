@@ -155,7 +155,7 @@ try:
                 continue
 
             try:
-                answer2 = resolver.resolve('AS' + asn + '.asn.cymru.com', 'TXT')
+                answer2 = resolver.resolve('AS%d.asn.cymru.com' % asn, 'TXT')
             except Exception as e:
                 import sys
                 sys.stderr.write(str(e))
