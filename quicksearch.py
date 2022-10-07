@@ -174,7 +174,14 @@ try:
 
     @app.route('/ipi/<string:addr>')
     def ip_info(addr):
-        return print_client_ip_info_handler(addr)
+        try:
+            addr = ipaddress.ip_address(addr)
+            return print_client_ip_info_handler(addr)
+        except:
+            return Response(
+                    'Error\nInvalid input (not an IP address)\n',
+                    mimetype='text/plain'
+                    ), 400
 
 except:
     # Oh well.
