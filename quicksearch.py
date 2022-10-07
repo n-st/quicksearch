@@ -107,9 +107,7 @@ try:
     if not hasattr(resolver, 'resolve'):
         resolver.resolve = resolver.query
 
-    def print_client_ip_info_handler():
-        addr = ipaddress.ip_address(request.remote_addr)
-
+    def print_client_ip_info_handler(addr):
         if type(addr) == ipaddress.IPv6Address and addr.ipv4_mapped:
             addr = addr.ipv4_mapped
 
@@ -172,7 +170,11 @@ try:
 
     @app.route('/ipi')
     def whats_my_ip_info():
-        return print_client_ip_info_handler()
+        return print_client_ip_info_handler(ipaddress.ip_address(request.remote_addr))
+
+    @app.route('/ipi/<string:addr>')
+    def ip_info(addr):
+        return print_client_ip_info_handler(addr)
 
 except:
     # Oh well.
