@@ -146,23 +146,24 @@ try:
         for record in answer:
             text = str(record).strip('"')
             result.append(text)
-            asn = text.split()[0]
+            asns = text.split('|')[0].split()
 
-            try:
-                asn = int(asn)
-            except:
-                # skip non-numerical data (it's probably an error message)
-                continue
+            for asn in asns:
+                try:
+                    asn = int(asn)
+                except:
+                    # skip non-numerical data (it's probably an error message)
+                    continue
 
-            try:
-                answer2 = resolver.resolve('AS%d.asn.cymru.com' % asn, 'TXT')
-            except Exception as e:
-                import sys
-                sys.stderr.write(str(e))
-                answer2 = ['No information available']
-            for record2 in answer2:
-                text2 = str(record2).strip('"')
-                result.append(text2)
+                try:
+                    answer2 = resolver.resolve('AS%d.asn.cymru.com' % asn, 'TXT')
+                except Exception as e:
+                    import sys
+                    sys.stderr.write(str(e))
+                    answer2 = ['No information available']
+                for record2 in answer2:
+                    text2 = str(record2).strip('"')
+                    result.append(text2)
 
         return Response(
                 '\n'.join(result) + '\n',
