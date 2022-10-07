@@ -153,7 +153,7 @@ try:
                 continue
 
             try:
-                answer2 = resolver.resolve(asn + '.asn.cymru.com', 'TXT')
+                answer2 = resolver.resolve('AS' + asn + '.asn.cymru.com', 'TXT')
             except Exception as e:
                 answer2 = ['No information available']
             for record2 in answer2:
