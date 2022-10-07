@@ -121,7 +121,10 @@ try:
         else:
             addr_version = 'Address version unknown'
 
-        ptrs = '+'.join([record.to_text() for record in resolver.resolve_address(str(addr))])
+        ptrs = '+'.join([
+            record.to_text() for record in
+                resolver.resolve(addr.reverse_pointer, 'PTR')
+            ])
 
         result.append('%s | %s | %s' % (
             addr_version,
