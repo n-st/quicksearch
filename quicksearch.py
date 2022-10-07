@@ -102,6 +102,11 @@ def whats_my_ip():
 
 try:
     from dns import resolver
+
+    # approximate compatibility (different search list behaviour) with dnspython < v2.0.0
+    if not hasattr(resolver, 'resolve'):
+        resolver.resolve = resolver.query
+
     def print_client_ip_info_handler():
         addr = ipaddress.ip_address(request.remote_addr)
 
