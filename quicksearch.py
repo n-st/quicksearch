@@ -177,7 +177,9 @@ try:
         try:
             addr = ipaddress.ip_address(addr)
             return print_client_ip_info_handler(addr)
-        except:
+        except Exception as e:
+            import sys
+            sys.stderr.write(str(e))
             return Response(
                     'Error\nInvalid input (not an IP address)\n',
                     mimetype='text/plain'
