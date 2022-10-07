@@ -139,6 +139,8 @@ try:
         try:
             answer = resolver.resolve(cymru_query, 'TXT')
         except Exception as e:
+            import sys
+            sys.stderr.write(str(e))
             answer = ['No information available']
 
         for record in answer:
@@ -155,6 +157,8 @@ try:
             try:
                 answer2 = resolver.resolve('AS' + asn + '.asn.cymru.com', 'TXT')
             except Exception as e:
+                import sys
+                sys.stderr.write(str(e))
                 answer2 = ['No information available']
             for record2 in answer2:
                 text2 = str(record2).strip('"')
