@@ -124,10 +124,15 @@ try:
         else:
             addr_version = 'Address version unknown'
 
-        ptrs = '+'.join([
-            record.to_text() for record in
-                resolver.resolve(addr.reverse_pointer, 'PTR')
-            ])
+        try:
+            ptrs = '+'.join([
+                record.to_text() for record in
+                    resolver.resolve(addr.reverse_pointer, 'PTR')
+                ])
+        except Exception as e:
+            import sys
+            sys.stderr.write(str(e))
+            ptrs = 'no PTR'
 
         result.append('%s | %s | %s' % (
             addr_version,
@@ -176,7 +181,6 @@ try:
     def ip_info(addr):
         try:
             addr = ipaddress.ip_address(addr)
-            return print_client_ip_info_handler(addr)
         except Exception as e:
             import sys
             sys.stderr.write(str(e))
@@ -184,6 +188,7 @@ try:
                     'Error\nInvalid input (not an IP address)\n',
                     mimetype='text/plain'
                     ), 400
+        return print_client_ip_info_handler(addr)
 
 except:
     # Oh well.
