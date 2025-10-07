@@ -96,6 +96,190 @@ def print_client_ip_handler():
             mimetype='text/plain'
             )
 
+try:
+    import requests
+    import json
+    from datetime import date
+
+    @app.route('/zug/<int:zugnr>')
+    def bahn_expert_train_number(zugnr, searchdate=date.today().isoformat(), country='DE'):
+        # tldr: find the bahn.expert link(s)
+        # to the one (or multiple) train running
+        # - as the given number &&
+        # - on the given day (default: today) &&
+        # - beginning and/or ending in the given country (default: Germany)
+        # if only one result: redirect there immediately.
+
+        UIC_COUNTRY_CODES = {
+                'FI': 10,
+                'RU': 20,
+                'BY': 21,
+                'UA': 22,
+                'MD': 23,
+                'LT': 24,
+                'LV': 25,
+                'EE': 26,
+                'KZ': 27,
+                'GE': 28,
+                'UZ': 29,
+                'KP': 30,
+                'MN': 31,
+                'VN': 32,
+                'CN': 33,
+                'LA': 34,
+                'CU': 40,
+                'AL': 41,
+                'JP': 42,
+                'BA': 44,
+                'BA': 49,
+                'BA': 50,
+                'PL': 51,
+                'BG': 52,
+                'RO': 53,
+                'CZ': 54,
+                'HU': 55,
+                'SK': 56,
+                'AZ': 57,
+                'AM': 58,
+                'KG': 59,
+                'IE': 60,
+                'KR': 61,
+                'ME': 62,
+                'MK': 65,
+                'TJ': 66,
+                'TM': 67,
+                'AF': 68,
+                'GB': 70,
+                'ES': 71,
+                'RS': 72,
+                'GR': 73,
+                'SE': 74,
+                'TR': 75,
+                'NO': 76,
+                'HR': 78,
+                'SI': 79,
+                'DE': 80,
+                'AT': 81,
+                'LU': 82,
+                'IT': 83,
+                'NL': 84,
+                'CH': 85,
+                'DK': 86,
+                'FR': 87,
+                'BE': 88,
+                'TZ': 89,
+                'EG': 90,
+                'TN': 91,
+                'DZ': 92,
+                'MA': 93,
+                'PT': 94,
+                'IL': 95,
+                'IR': 96,
+                'SY': 97,
+                'LB': 98,
+                'IQ': 99,
+        }
+        def get_country_code(country):
+            country = country.upper()
+            if country in UIC_COUNTRY_CODES:
+                country = str(UIC_COUNTRY_CODES[country])
+            if country:
+                country += '0' # with country code xx, xx0 are usually major (= not-just-buses) stations
+            return country
+
+        def query_bahnexpert(journeyNumber, searchdate=date.today().isoformat()):
+            url = 'https://bahn.expert/rpc/journeys.find'
+            input_json = json.dumps({
+                "0": json.dumps([
+                        {'journeyNumber': 1, 'initialDepartureDate': 2, 'withOEV': 3},
+                        journeyNumber, ['Date', searchdate], False
+                ])
+            })
+            params = {
+                'batch': 1,
+                'input': input_json,
+            }
+            return json.loads(requests.get(url, params=params).json()[0]['result']['data'])
+
+        def unravel(j, index=0):
+            # "decompress" the weird key-value-indirection JSON from bahn.expert
+            if type(j[index]) == list:
+                output = []
+                for item in j[index]:
+                    output.append(unravel(j, item))
+                return output
+
+            elif type(j[index]) == dict:
+                output = dict()
+                for key, value in j[index].items():
+                    output[key] = unravel(j, value)
+                return output
+
+            elif type(j[index]) in [str, int, float]:
+                return j[index]
+
+        def find_country_and_train_journey(journeys, country_code):
+            # returns: list of tuples (human-readable name, URL)
+            results = []
+            for journey in journeys:
+                if not journey['firstStop']['stopPlace']['evaNumber'].startswith(country_code) \
+                   and not journey['lastStop']['stopPlace']['evaNumber'].startswith(country_code):
+                    continue
+                if 'Bus' in journey['train']['category']:
+                    continue
+                results.append(
+                        (
+                        '%s (%s)' % (
+                            journey['train']['name'],
+                            journey['train']['journeyNumber']
+                            ),
+                        'https://bahn.expert/details/%s %s/j/%s' % (
+                            journey['train']['category'],
+                            journey['train']['journeyNumber'],
+                            journey['journeyId']
+                            )
+                        )
+                    )
+            return results
+
+        try:
+            bahnexpert_json = query_bahnexpert(zugnr, searchdate)
+            journeys = unravel(bahnexpert_json)
+            country_code = get_country_code(country)
+            results = find_country_and_train_journey(journeys, country_code)
+
+            if not results:
+                return Response('No trains were found matching these search parameters.',
+                            mimetype='text/plain'
+                        )
+            elif len(results) > 1:
+                return Response('The following train journeys match your query:<br/>\n<ul>\n'+
+                                ''.join(['<li><a href="%s">%s</a></li>\n' % (x[1], x[0]) for x in results])+
+                                '</ul>',
+                            mimetype='text/html'
+                        )
+            else:
+                return redirect(results[0][1], code=303)
+
+        except Exception as e:
+            import sys
+            sys.stderr.write(str(e))
+            return Response('An error occurred while searching for this train.\nDetails are not revealed to the user, sorry.\n',
+                    mimetype='text/plain'
+                    )
+
+    @app.route('/zug/<string:searchdate>/<int:zugnr>')
+    def bahn_expert_train_date_number(zugnr, searchdate):
+        return bahn_expert_train_number(zugnr, searchdate)
+
+    @app.route('/zug/<string:country>/<string:searchdate>/<int:zugnr>')
+    def bahn_expert_train_country_date_number(zugnr, searchdate, country):
+        return bahn_expert_train_number(zugnr, searchdate, country)
+
+except:
+    # Oh well.
+    pass
+
 @app.route('/ip')
 def whats_my_ip():
     return print_client_ip_handler()
