@@ -690,10 +690,6 @@ def facepalm():
 def randname():
     return static_redirect_handler('http://www.behindthename.com/random/random.php?number=1&gender=u&surname=&nodiminutives=yes&all=yes')
 
-@app.route('/hps/<string:query>')
-def xmr_mining_calculator(query):
-    return simple_query_handler('https://www.cryptocompare.com/mining/calculator/xmr?HashingPower=%s&HashingUnit=H%%2Fs&PowerConsumption=0', query)
-
 @app.route('/ukcomp/<path:query>')
 def uk_company_registrations(query):
     return simple_query_handler('https://beta.companieshouse.gov.uk/search?q=%s', query)
