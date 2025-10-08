@@ -102,7 +102,7 @@ try:
     from datetime import date
 
     @app.route('/zug/<int:zugnr>')
-    def bahn_expert_train_number(zugnr, searchdate=date.today().isoformat(), country='DE'):
+    def bahn_expert_train_number(zugnr, searchdate=None, country='DE'):
         # tldr: find the bahn.expert link(s)
         # to the one (or multiple) train running
         # - as the given number &&
@@ -187,7 +187,9 @@ try:
                 country += '0' # with country code xx, xx0 are usually major (= not-just-buses) stations
             return country
 
-        def query_bahnexpert(journeyNumber, searchdate=date.today().isoformat()):
+        def query_bahnexpert(journeyNumber, searchdate=None):
+            if not searchdate:
+                searchdate = date.today().isoformat()
             url = 'https://bahn.expert/rpc/journeys.find'
             input_json = json.dumps({
                 "0": json.dumps([
