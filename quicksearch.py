@@ -99,7 +99,8 @@ def print_client_ip_handler():
 try:
     import requests
     import json
-    from datetime import date
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
 
     @app.route('/zug/<int:zugnr>')
     def bahn_expert_train_number(zugnr, searchdate=None, country='DE'):
@@ -189,7 +190,7 @@ try:
 
         def query_bahnexpert(journeyNumber, searchdate=None):
             if not searchdate:
-                searchdate = date.today().isoformat()
+                searchdate = datetime.now(ZoneInfo("Europe/Berlin")).date().isoformat()
             url = 'https://bahn.expert/rpc/journeys.find'
             input_json = json.dumps({
                 "0": json.dumps([
