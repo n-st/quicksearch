@@ -184,8 +184,6 @@ try:
             country = country.upper()
             if country in UIC_COUNTRY_CODES:
                 country = str(UIC_COUNTRY_CODES[country])
-            if country:
-                country += '0' # with country code xx, xx0 are usually major (= not-just-buses) stations
             return country
 
         def query_bahnexpert(journeyNumber, searchdate=None):
