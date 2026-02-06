@@ -189,7 +189,7 @@ try:
         def query_bahnexpert(journeyNumber, searchdate=None):
             if not searchdate:
                 searchdate = datetime.now(ZoneInfo("Europe/Berlin")).date().isoformat()
-            url = 'https://bahn.expert/rpc/journeys.find2'
+            url = 'https://bahn.expert/rpc/journeys.find'
             input_json = json.dumps({
                 "0": json.dumps([
                         {'journeyNumber': 1, 'initialDepartureDate': 2, 'withOEV': 3},
