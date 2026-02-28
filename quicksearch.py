@@ -231,10 +231,23 @@ try:
                     continue
                 if 'Bus' in journey['train']['category']:
                     continue
+
+                if 'name' in journey['train']:
+                    name = journey['train']['name']
+                else:
+                    parts = []
+                    if journey['train'].get('category', None):
+                        parts.append(journey['train']['category'])
+                    if journey['train'].get('line', None):
+                        parts.append(journey['train']['line'])
+                    else:
+                        parts.append(str(journey['train']['journeyNumber']))
+                    name = ' '.join(parts)
+
                 results.append(
                         (
                         '%s (%s)' % (
-                            journey['train']['name'],
+                            name,
                             journey['train']['journeyNumber']
                             ),
                         'https://bahn.expert/details/%s %s/j/%s' % (
