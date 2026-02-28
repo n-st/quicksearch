@@ -229,11 +229,14 @@ try:
                 if not journey['firstStop']['stopPlace']['evaNumber'].startswith(country_code) \
                    and not journey['lastStop']['stopPlace']['evaNumber'].startswith(country_code):
                     continue
-                if 'Bus' in journey['train']['category']:
+
+                train = journey['train']
+
+                if 'Bus' in train.get('category', []):
                     continue
 
-                if 'name' in journey['train']:
-                    name = journey['train']['name']
+                if train.get('name', None):
+                    name = train.get('name')
                 else:
                     parts = []
                     if journey['train'].get('category', None):
@@ -241,18 +244,19 @@ try:
                     if journey['train'].get('line', None):
                         parts.append(journey['train']['line'])
                     else:
-                        parts.append(str(journey['train']['journeyNumber']))
+                        parts.append(str(train.get('journeyNumber')))
+
                     name = ' '.join(parts)
 
                 results.append(
                         (
                         '%s (%s)' % (
                             name,
-                            journey['train']['journeyNumber']
+                            train.get('journeyNumber')
                             ),
                         'https://bahn.expert/details/%s %s/j/%s' % (
-                            journey['train']['category'],
-                            journey['train']['journeyNumber'],
+                            train.get('category'),
+                            train.get('journeyNumber'),
                             journey['journeyId']
                             )
                         )
