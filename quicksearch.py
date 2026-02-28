@@ -204,6 +204,9 @@ try:
 
         def unravel(j, index=0):
             # "decompress" the weird key-value-indirection JSON from bahn.expert
+            if index < 0:
+                return None
+
             if type(j[index]) == list:
                 output = []
                 for item in j[index]:
