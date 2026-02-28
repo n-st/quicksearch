@@ -277,11 +277,13 @@ try:
             country_code = get_country_code(country)
             results = find_country_and_train_journey(journeys, country_code)
 
+            verbose_mode = 'v' in request.args
+
             if not results:
                 return Response('No trains were found matching these search parameters.',
                             mimetype='text/plain'
                         )
-            elif len(results) > 1:
+            elif len(results) > 1 or verbose_mode:
                 return Response('The following train journeys match your query:<br/>\n<ul>\n'+
                                 ''.join(['<li><a href="%s">%s</a></li>\n' % (x[1], x[0]) for x in results])+
                                 '</ul>',
