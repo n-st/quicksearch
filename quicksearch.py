@@ -239,10 +239,18 @@ try:
                     name = train.get('name')
                 else:
                     parts = []
-                    if journey['train'].get('category', None):
-                        parts.append(journey['train']['category'])
-                    if journey['train'].get('line', None):
-                        parts.append(journey['train']['line'])
+
+                    if train.get('category', None):
+                        # add a category if there is one, and it isn't repeated in the line anyway (e.g. "RB RB27")
+                        if not train.get('line', None):
+                            parts.append(train.get('category'))
+                        elif train.get('line', '').startswith(train.get('category')):
+                            pass
+                        else:
+                            parts.append(train.get('category'))
+
+                    if train.get('line', None):
+                        parts.append(train.get('line'))
                     else:
                         parts.append(str(train.get('journeyNumber')))
 
