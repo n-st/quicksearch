@@ -189,7 +189,7 @@ try:
         def query_bahnexpert(journeyNumber, searchdate=None):
             if not searchdate:
                 searchdate = datetime.now(ZoneInfo("Europe/Berlin")).date().isoformat()
-            url = 'https://bahn.expert/rpc/journeys.find'
+            url = 'https://bahn.expert/rpc/journey.find'
             input_json = json.dumps({
                 "0": json.dumps([
                         {'journeyNumber': 1, 'initialDepartureDate': 2, 'withOEV': 3},
@@ -200,7 +200,11 @@ try:
                 'batch': 1,
                 'input': input_json,
             }
-            return json.loads(requests.get(url, params=params).json()[0]['result']['data'])
+            headers = {
+                'referer': 'https://bahn.expert/',
+            }
+            response = requests.get(url, params=params, headers=headers)
+            return json.loads(response.json()[0]['result']['data'])
 
         def unravel(j, index=0):
             # "decompress" the weird key-value-indirection JSON from bahn.expert
