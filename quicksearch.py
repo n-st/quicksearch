@@ -604,7 +604,7 @@ def baureihe_nvr_de(query):
 
     if len(query) == 3:
         # 462 -> [0462, 1462, 2462, ...]
-        search_texts = [str(i) + query for i in range(10)]
+        search_texts = [str(query)] + [str(i) + query for i in range(10)]
     else:
         # 1221 -> [1221]
         search_texts = [str(query)]
