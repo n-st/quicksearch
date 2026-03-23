@@ -598,6 +598,22 @@ def urlencode(query):
             mimetype='text/plain'
             ), 200
 
+@app.route('/br/<query>')
+def baureihe_nvr_de(query):
+    br_url = 'https://de.wikipedia.org/wiki/Liste_der_Baureihen_im_deutschen_Fahrzeugeinstellungsregister'
+
+    if len(query) == 3:
+        # 462 -> [0462, 1462, 2462, ...]
+        search_texts = [str(i) + query for i in range(10)]
+    else:
+        # 1221 -> [1221]
+        search_texts = [str(query)]
+
+    text_selectors = ['text=' + text for text in search_texts]
+    search_fragment = '#:~:' + '&'.join(text_selectors)
+
+    return static_redirect_handler(br_url + search_fragment)
+
 @app.route('/ula.ext')
 def ipv6_unique_local_address_external():
     return static_redirect_handler('http://simpledns.com/private-ipv6.aspx')
