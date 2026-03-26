@@ -189,7 +189,6 @@ try:
         def query_bahnexpert(journeyNumber, searchdate=None):
             if not searchdate:
                 searchdate = datetime.now(ZoneInfo("Europe/Berlin")).date().isoformat()
-            url = 'https://bahn.expert/rpc/journeys.find'
             input_json = json.dumps({
                 "0": json.dumps([
                         {'journeyNumber': 1, 'initialDepartureDate': 2, 'withOEV': 3},
@@ -203,7 +202,11 @@ try:
             headers = {
                 'referer': 'https://bahn.expert/',
             }
+            url = 'https://bahn.expert/rpc/journeys.find'
             response = requests.get(url, params=params, headers=headers)
+            if response.status_code == 404:
+                url = 'https://bahn.expert/rpc/journey.find'
+                response = requests.get(url, params=params, headers=headers)
             return json.loads(response.json()[0]['result']['data'])
 
         def unravel(j, index=0):
