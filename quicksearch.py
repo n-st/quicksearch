@@ -99,7 +99,7 @@ def print_client_ip_handler():
 try:
     import requests
     import json
-    from datetime import datetime
+    from datetime import datetime, timedelta
     from zoneinfo import ZoneInfo
 
     @app.route('/zug/<int:zugnr>')
@@ -189,6 +189,9 @@ try:
         def query_bahnexpert(journeyNumber, searchdate=None):
             if not searchdate:
                 searchdate = datetime.now(ZoneInfo("Europe/Berlin")).date().isoformat()
+            elif searchdate.startswith('-') or searchdate.startswith('+'):
+                delta = timedelta(days=int(searchdate))
+                searchdate = (datetime.now(ZoneInfo("Europe/Berlin")).date() + delta).isoformat()
             input_json = json.dumps({
                 "0": json.dumps([
                         {'journeyNumber': 1, 'initialDepartureDate': 2, 'withOEV': 3},
