@@ -211,6 +211,34 @@ try:
             if response.status_code == 404:
                 url = 'https://bahn.expert/rpc/journey.find'
                 response = requests.get(url, params=params, headers=headers)
+
+            if response.status_code == 404:
+                raise Exception('bahn.expert RPC endpoints are 404.')
+
+            try:
+                _ = response.json()
+            except requests.exceptions.JSONDecodeError:
+                raise Exception('bahn.expert RPC response is %s "%s" and is not JSON.' % (response.status_code, response.reason))
+
+            if not len(response.json()):
+                raise Exception('bahn.expert RPC response is %s "%s" and is empty.' % (response.status_code, response.reason))
+            elif type(response.json()) != list:
+                raise Exception('bahn.expert RPC response is %s "%s" and is not a list.' % (response.status_code, response.reason))
+            elif 'result' not in response.json()[0]:
+                if 'error' in response.json()[0]:
+                    message = None
+                    try:
+                        error_json = unravel(json.loads(response.json()[0]['error']))
+                        print(error_json)
+                        message = error_json['message']
+                    except:
+                        pass
+                    raise Exception('bahn.expert RPC response is %s "%s" and contains an error%s' % (response.status_code, response.reason, (':\n'+message if message else '.')))
+                else:
+                    raise Exception('bahn.expert RPC response is %s "%s" and does not contain a result.' % (response.status_code, response.reason))
+            elif 'data' not in response.json()[0]['result']:
+                raise Exception('bahn.expert RPC response is %s "%s" and does not contain a result.' % (response.status_code, response.reason))
+
             return json.loads(response.json()[0]['result']['data'])
 
         def unravel(j, index=0):
@@ -305,10 +333,15 @@ try:
 
         except Exception as e:
             import sys
-            sys.stderr.write(str(e))
-            return Response('An error occurred while searching for this train.\nDetails are not revealed to the user, sorry.\n',
-                    mimetype='text/plain'
-                    )
+            sys.stderr.write(str(e)+'\n')
+            if 'bahn.expert' in str(e):
+                return Response('An error occurred while searching for this train:\n%s\n' % (str(e)),
+                        mimetype='text/plain'
+                        )
+            else:
+                return Response('An error occurred while searching for this train.\nDetails are not revealed to the user, sorry.\n',
+                        mimetype='text/plain'
+                        )
 
     @app.route('/zug/<string:searchdate>/<int:zugnr>')
     def bahn_expert_train_date_number(zugnr, searchdate):
