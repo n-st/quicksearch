@@ -206,10 +206,12 @@ try:
                 'referer': 'https://bahn.expert/',
                 'user-agent': 'quicksearch/2026.07.12 (https://github.com/n-st/quicksearch)',
             }
-            url = 'https://bahn.expert/rpc/journeys.find'
+
+            url = 'https://bahn.expert/rpc/journey.find'
             response = requests.get(url, params=params, headers=headers)
+
             if response.status_code == 404:
-                url = 'https://bahn.expert/rpc/journey.find'
+                url = 'https://bahn.expert/rpc/journeys.find'
                 response = requests.get(url, params=params, headers=headers)
 
             if response.status_code == 404:
