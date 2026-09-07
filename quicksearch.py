@@ -192,30 +192,30 @@ try:
             elif searchdate.startswith('-') or searchdate.startswith('+'):
                 delta = timedelta(days=int(searchdate))
                 searchdate = (datetime.now(ZoneInfo("Europe/Berlin")).date() + delta).isoformat()
-            input_json = json.dumps({
-                "0": json.dumps([
-                        {'journeyNumber': 1, 'initialDepartureDate': 2, 'withOEV': 3},
-                        journeyNumber, ['Date', searchdate], False
-                ])
-            })
-            params = {
-                'batch': 1,
-                'input': input_json,
-            }
+
+            query = {
+                "json": {
+                    'journeyNumber': journeyNumber,
+                    'initialDepartureDate': searchdate,
+                    'withOEV': False
+                },
+                "meta": [
+                    ["date", "initialDepartureDate"]
+                    ]
+                }
+
             headers = {
                 'referer': 'https://bahn.expert/',
                 'user-agent': 'quicksearch/2026.07.12 (https://github.com/n-st/quicksearch)',
             }
 
-            url = 'https://bahn.expert/api/trpc/journey.find'
-            response = requests.get(url, params=params, headers=headers)
+            url = 'https://bahn.expert/api/orpc/journey/find'
+            response = requests.post(url, json=query, headers=headers)
+
+            print(response.content)
 
             if response.status_code == 404:
-                url = 'https://bahn.expert/api/trpc/journeys.find'
-                response = requests.get(url, params=params, headers=headers)
-
-            if response.status_code == 404:
-                raise Exception('bahn.expert RPC endpoints are 404.')
+                raise Exception('bahn.expert RPC endpoint is 404.')
 
             try:
                 _ = response.json()
