@@ -212,56 +212,20 @@ try:
             url = 'https://bahn.expert/api/orpc/journey/find'
             response = requests.post(url, json=query, headers=headers)
 
-            print(response.content)
-
             if response.status_code == 404:
                 raise Exception('bahn.expert RPC endpoint is 404.')
 
             try:
-                _ = response.json()
+                j = response.json()
             except requests.exceptions.JSONDecodeError:
                 raise Exception('bahn.expert RPC response is %s "%s" and is not JSON.' % (response.status_code, response.reason))
 
-            if not len(response.json()):
-                raise Exception('bahn.expert RPC response is %s "%s" and is empty.' % (response.status_code, response.reason))
-            elif type(response.json()) != list:
+            if not 'json' in j: # yes, really. bahn.expert's API is ... certainly something.
+                raise Exception('bahn.expert RPC response is %s "%s" and does not contain the expected JSON blob.' % (response.status_code, response.reason))
+            elif type(j['json']) != list:
                 raise Exception('bahn.expert RPC response is %s "%s" and is not a list.' % (response.status_code, response.reason))
-            elif 'result' not in response.json()[0]:
-                if 'error' in response.json()[0]:
-                    message = None
-                    try:
-                        error_json = unravel(json.loads(response.json()[0]['error']))
-                        print(error_json)
-                        message = error_json['message']
-                    except:
-                        pass
-                    raise Exception('bahn.expert RPC response is %s "%s" and contains an error%s' % (response.status_code, response.reason, (':\n'+message if message else '.')))
-                else:
-                    raise Exception('bahn.expert RPC response is %s "%s" and does not contain a result.' % (response.status_code, response.reason))
-            elif 'data' not in response.json()[0]['result']:
-                raise Exception('bahn.expert RPC response is %s "%s" and does not contain a result.' % (response.status_code, response.reason))
 
-            return json.loads(response.json()[0]['result']['data'])
-
-        def unravel(j, index=0):
-            # "decompress" the weird key-value-indirection JSON from bahn.expert
-            if index < 0:
-                return None
-
-            if type(j[index]) == list:
-                output = []
-                for item in j[index]:
-                    output.append(unravel(j, item))
-                return output
-
-            elif type(j[index]) == dict:
-                output = dict()
-                for key, value in j[index].items():
-                    output[key] = unravel(j, value)
-                return output
-
-            elif type(j[index]) in [str, int, float]:
-                return j[index]
+            return j['json']
 
         def find_country_and_train_journey(journeys, country_code):
             # returns: list of tuples (human-readable name, URL)
@@ -313,8 +277,7 @@ try:
             return results
 
         try:
-            bahnexpert_json = query_bahnexpert(zugnr, searchdate)
-            journeys = unravel(bahnexpert_json)
+            journeys = query_bahnexpert(zugnr, searchdate)
             country_code = get_country_code(country)
             results = find_country_and_train_journey(journeys, country_code)
 
