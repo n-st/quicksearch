@@ -237,7 +237,20 @@ try:
 
                 train = journey['train']
 
-                if 'Bus' in train.get('category', []):
+                if 'Bus' in train.get('category', ''):
+                    continue
+
+                if 'neg' in train.get('category', ''):
+                    continue
+
+                if 'SeilB' in train.get('line', ''):
+                    # Kabinenseilbahn Thale:
+                    #  "train": {
+                    #    "category": "SB",
+                    #    "journeyNumber": 4,
+                    #    "line": "SeilB",
+                    #    "transportType": "REGIONAL_TRAIN"
+                    #  }
                     continue
 
                 if train.get('name', None):
